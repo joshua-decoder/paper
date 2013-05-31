@@ -21,18 +21,24 @@
 
 %% \newcommand{\aff}{\ensuremath{{}^\text{\Radioactivity}}}
 %% \newcommand{\afff}{\ensuremath{{}^\text{\Bat}}}
-\newcommand{\aff}{\ensuremath{{}^\text{1}}}
-\newcommand{\afff}{\ensuremath{{}^\text{2}}}
+\newcommand{\hltcoe}{\ensuremath{{}^\text{1}}}
+\newcommand{\clsp}{\ensuremath{{}^\text{2}}}
+\newcommand{\upenn}{\ensuremath{{}^\text{2}}}
 \newcommand{\grammarrule}[3]{$#1 \to \langle \text{#2} , \text{#3} \rangle$ }
 
-\title{Joshua 4.0: Packing, PRO, and Paraphrases}
+\title{Joshua 5.0: Every day, and in every way, getting better and better}
 
-\author{Juri Ganitkevitch\aff, Yuan Cao\aff, Jonathan Weese\aff, Matt
-  Post\afff, and Chris
-  Callison-Burch\aff \\
-  \aff Center for Language and Speech Processing \\
-  \afff Human Language Technology Center of Excellence \\
-  Johns Hopkins University}
+\author{Matt Post\hltcoe \and Juri Ganitkevitch\clsp \and Yuan Cao\clsp \and Jonathan Weese\clsp 
+  \and Luke Orland\hltcoe \\
+  \clsp Center for Language and Speech Processing \\
+  \hltcoe Human Language Technology Center of Excellence \\
+  Johns Hopkins University \\
+  Baltimore, MD 21218
+  \AND  Chris Callison-Burch \\
+  Computer and Information Science \\
+  University of Pennsylvania \\
+  Philadelphia, PA 99999
+}
 
 \date{}
 
@@ -40,18 +46,23 @@
 \maketitle
 
 \begin{abstract}
-  We present Joshua 4.0, the newest version of our open-source decoder
-  for parsing-based statistical machine translation. The main
-  contributions in this release are the introduction of a compact
-  grammar representation based on packed tries, and the integration of
-  our implementation of pairwise ranking optimization, J-PRO. We
-  further present the extension of the Thrax SCFG grammar extractor to
-  pivot-based extraction of syntactically informed sentential
-  paraphrases.
+
 \end{abstract}
 
 \section{Introduction}
 \label{sec-intro}
+
+What's new:
+
+\begin{itemize}
+  \item \emph{KBMIRA integration}.
+  \item \emph{Pipeline improvements}.
+  \item \emph{Thrax rewrite}. Find some way to show how much faster it is.
+  \item \emph{Significantly faster}. Compare a graph over threads from last year to this year.
+  \item \emph{Amortization}. Show how much faster that is.
+  \item \emph{Server mode}. Show how that works.
+  \item \emph{Synchronous parsing}. 
+\end{itemize}
 
 Joshua is an open-source toolkit\footnote{\url{joshua-decoder.org}}
 for parsing-based statistical machine translation of human
@@ -663,7 +674,7 @@ funded by the European Commission (7th Framework Programme), and by
 the NSF under grant IIS-0713448. Opinions, interpretations, and
 conclusions are the authors' alone.
 
-\bibliographystyle{naaclhlt2012}
+\bibliographystyle{acl2013}
 \bibliography{joshua}
 
 \end{document}
