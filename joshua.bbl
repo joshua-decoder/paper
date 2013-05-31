@@ -1,0 +1,154 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Bannard and Callison-Burch}2005]{Callison-Burch2005}
+Colin Bannard and Chris Callison-Burch.
+\newblock 2005.
+\newblock Paraphrasing with bilingual parallel corpora.
+\newblock In {\em Proceedings of ACL}.
+
+\bibitem[\protect\citename{Chiang}2007]{Chiang2007}
+David Chiang.
+\newblock 2007.
+\newblock Hierarchical phrase-based translation.
+\newblock {\em Computational Linguistics}, 33(2):201--228.
+
+\bibitem[\protect\citename{Daum{\'e} and Marcu}2006]{MegaM}
+Hal Daum{\'e} and Daniel Marcu.
+\newblock 2006.
+\newblock Domain adaptation for statistical classifiers.
+\newblock {\em Journal of Artificial Intelligence Research}, 26(1):101--126.
+
+\bibitem[\protect\citename{Dyer}2010]{Dyer2010}
+Chris Dyer.
+\newblock 2010.
+\newblock Two monolingual parses are better than one (synchronous parse).
+\newblock In {\em Proceedings of HLT/NAACL}, pages 263--266. Association for
+  Computational Linguistics.
+
+\bibitem[\protect\citename{Federico and Bertoldi}2006]{Federico2006}
+Marcello Federico and Nicola Bertoldi.
+\newblock 2006.
+\newblock How many bits are needed to store probabilities for phrase-based
+  translation?
+\newblock In {\em Proceedings of WMT06}, pages 94--101. Association for
+  Computational Linguistics.
+
+\bibitem[\protect\citename{Ganitkevitch \bgroup et al.\egroup
+  }2011]{Ganitkevitch2011}
+Juri Ganitkevitch, Chris Callison-Burch, Courtney Napoles, and Benjamin {Van
+  Durme}.
+\newblock 2011.
+\newblock Learning sentential paraphrases from bilingual parallel corpora for
+  text-to-text generation.
+\newblock In {\em Proceedings of EMNLP}.
+
+\bibitem[\protect\citename{Heafield}2011]{KenLM}
+Kenneth Heafield.
+\newblock 2011.
+\newblock {KenLM}: Faster and smaller language model queries.
+\newblock In {\em Proceedings of the Sixth Workshop on Statistical Machine
+  Translation}, pages 187--197. Association for Computational Linguistics.
+
+\bibitem[\protect\citename{Hollingshead and Roark}2008]{Kristy2008}
+Kristy Hollingshead and Brian Roark.
+\newblock 2008.
+\newblock Reranking with baseline system scores and ranks as features.
+\newblock Technical report, Center for Spoken Language Understanding, Oregon
+  Health \& Science University.
+
+\bibitem[\protect\citename{Hopkins and May}2011]{PRO2011}
+Mark Hopkins and Jonathan May.
+\newblock 2011.
+\newblock Tuning as ranking.
+\newblock In {\em Proceedings of EMNLP}.
+
+\bibitem[\protect\citename{Li \bgroup et al.\egroup }2009]{Joshua-WMT}
+Zhifei Li, Chris Callison-Burch, Chris Dyer, Juri Ganitkevitch, Sanjeev
+  Khudanpur, Lane Schwartz, Wren Thornton, Jonathan Weese, and Omar Zaidan.
+\newblock 2009.
+\newblock Joshua: An open source toolkit for parsing-based machine translation.
+\newblock In {\em Proc. WMT}, Athens, Greece, March.
+
+\bibitem[\protect\citename{Li \bgroup et al.\egroup }2010a]{li2010joshua}
+Zhifei Li, Chris Callison-Burch, Chris Dyer, Juri Ganitkevitch, Ann Irvine,
+  Sanjeev Khudanpur, Lane Schwartz, Wren~N.G. Thornton, Ziyuan Wang, Jonathan
+  Weese, and Omar~F. Zaidan.
+\newblock 2010a.
+\newblock Joshua 2.0: a toolkit for parsing-based machine translation with
+  syntax, semirings, discriminative training and other goodies.
+\newblock In {\em Proc.\ WMT}.
+
+\bibitem[\protect\citename{Li \bgroup et al.\egroup }2010b]{Li2010coling}
+Zhifei Li, Ziyuan Wang, and Sanjeev Khudanpur.
+\newblock 2010b.
+\newblock Unsupervised discriminative language model training for machine
+  translation using simulated confusion sets.
+\newblock In {\em Proceedings of COLING}, Beijing, China, August.
+
+\bibitem[\protect\citename{Li}2011]{Hang2011}
+Hang Li.
+\newblock 2011.
+\newblock {\em Learning to Rank for Information Retrieval and Natural Language
+  Processing}.
+\newblock Morgan \& Claypool Publishers.
+
+\bibitem[\protect\citename{Manning and Klein}2003]{MaxEnt}
+Chris Manning and Dan Klein.
+\newblock 2003.
+\newblock Optimization, maxent models, and conditional estimation without
+  magic.
+\newblock In {\em Proceedings of HLT/NAACL}, pages 8--8. Association for
+  Computational Linguistics.
+
+\bibitem[\protect\citename{Och}2003]{Och2003}
+Franz Och.
+\newblock 2003.
+\newblock Minimum error rate training in statistical machine translation.
+\newblock In {\em Proceedings of the 41rd Annual Meeting of the Association for
+  Computational Linguistics (ACL-2003)}, Sapporo, Japan.
+
+\bibitem[\protect\citename{Pauls and Klein}2011]{BerkeleyLM}
+Adam Pauls and Dan Klein.
+\newblock 2011.
+\newblock Faster and smaller n-gram language models.
+\newblock In {\em Proceedings of ACL}, pages 258--267, Portland, Oregon, USA,
+  June. Association for Computational Linguistics.
+
+\bibitem[\protect\citename{Rosenblatt}1958]{Rosenblatt1958}
+Frank Rosenblatt.
+\newblock 1958.
+\newblock The perceptron: A probabilistic model for information storage and
+  organization in the brain.
+\newblock {\em Psychological Review}, 65(6):386--408.
+
+\bibitem[\protect\citename{Stolcke}2002]{SRILM}
+Andreas Stolcke.
+\newblock 2002.
+\newblock Srilm - an extensible language modeling toolkit.
+\newblock In {\em Seventh International Conference on Spoken Language
+  Processing}.
+
+\bibitem[\protect\citename{Weese \bgroup et al.\egroup }2011]{Joshua-3.0}
+Jonathan Weese, Juri Ganitkevitch, Chris Callison-Burch, Matt Post, and Adam
+  Lopez.
+\newblock 2011.
+\newblock Joshua 3.0: Syntax-based machine translation with the {Thrax} grammar
+  extractor.
+\newblock In {\em Proceedings of WMT11}.
+
+\bibitem[\protect\citename{Zaidan}2009]{zaidan2009z}
+Omar~F. Zaidan.
+\newblock 2009.
+\newblock {Z-MERT: A fully configurable open source tool for minimum error rate
+  training of machine translation systems}.
+\newblock {\em The Prague Bulletin of Mathematical Linguistics}, 91:79--88.
+
+\bibitem[\protect\citename{Zens and Ney}2007]{Zens2007}
+Richard Zens and Hermann Ney.
+\newblock 2007.
+\newblock Efficient phrase-table representation for machine translation with
+  applications to online {MT} and speech translation.
+\newblock In {\em Proceedings of HLT/NAACL}, pages 492--499, Rochester, New
+  York, April. Association for Computational Linguistics.
+
+\end{thebibliography}
