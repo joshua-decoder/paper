@@ -129,6 +129,72 @@ of threads.
 
 \subsection{}
 
+\subsection{Thrax 2.0}
+
+The Thrax module of our toolkit has undergone a similar overhaul. The
+rule extraction code was rewritten to be easier to understand and
+extend, allowing, for instance, for an easy inclusion of alternative
+nonterminal labeling strategies.
+
+We optimized the data representation used for the underlying
+map-reduce framework towards greater compactness and speed --
+resulting in a 300\% increase in extraction speed and an equivalent
+reduction is disk I/O (see Table~\ref{tab-thrax-speed}). These gains
+enabled us to extract a syntactically labeled De-En SAMT-style
+translation grammar from a bitext of over 4 million sentence pairs in
+just over 3 hours. Furthermore, Thrax 2.0 is capable of scaling to
+very large data sets, like the composite bitext used in the extraction
+of the paraphrase collection PPDB \cite{PPDB}, which counted 100
+million sentence pairs and over 2 billion words on the English side.
+
+\begin{figure}
+  \centering
+  \includegraphics[ width=0.95\linewidth]{figures/rich_context.pdf}
+  \caption{\small Here, position-aware lexical and part-of-speech
+    $n$-gram features, labeled dependency links , and features
+    reflecting the phrase's CCG-style label $\mathit{NP/NN}$ are
+    included in the context vector.}\label{fig-rich-context}
+\end{figure}
+
+Furthermore, Thrax 2.0 contains a module focused on the extraction of
+compact distributional signatures over large datasets. This
+\emph{distributional} mode collects contextual features for $n$-gram
+phrases, such as words occurring in a window around the phrase, as
+well as dependency-based and syntactic
+features. Figure~\ref{fig-rich-context} illustrates the feature
+space. We then compute a bit signature from the resulting feature
+vector via a randomized locality-sensitive hashing projection.  This
+yields a compact representation of a phrase's typical context. To
+perform this projection Thrax relies on the Jerboa toolkit
+\cite{Jerboa}. As part of the PPDB effort, Thrax has been used to
+extract rich distributional signatures for 175 million 1-to-4-gram
+phrases from the Annotated Gigaword corpus \cite{annotated-gigaword},
+a parsed and processed version of the English Gigaword
+\cite{Gigaword}.
+
+\begin{table}[t]
+  \begin{center}
+    \begin{tabular}{|c|r|r|r|r|}
+      \hline
+    & Disk Space & Extraction Time \\
+      \hline
+      \hline
+      Joshua 4.0 & 245GB & 219 min \\
+      \hline
+      Joshua 5.0 & 62GB  & 55 min\\
+      \hline
+      \hline
+      Difference & -75\% & -75\% \\
+      \hline
+    \end{tabular}
+  \end{center}
+  \caption{Comparing Hadoop's intermediate disk space use and extraction time on a
+    De-En Europarl Hiero grammar. Thrax 2.0, bundled with Joshua 5.0,
+    is up to 300\% faster and more compact.}
+  \label{tab-thrax-speed}
+\end{table}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
