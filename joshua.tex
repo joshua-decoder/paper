@@ -35,9 +35,9 @@
   Johns Hopkins University \\
   Baltimore, MD 21218
   \AND  Chris Callison-Burch \\
-  Computer and Information Science \\
+  Computer and Information Sciences Department \\
   University of Pennsylvania \\
-  Philadelphia, PA 99999
+  Philadelphia, PA 19104
 }
 
 \date{}
@@ -46,77 +46,130 @@
 \maketitle
 
 \begin{abstract}
-
+  We describe improvements made over the past year to Joshua, an
+  open-source translation system for parsing-based translation. The
+  main contributes this past year are significant improvements in
+  speed and usability of the grammar extraction and decoding steps. We
+  have also extended Joshua with support for sparse features and
+  training of large numbers of features with discriminative training
+  methods.
 \end{abstract}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec-intro}
 
-What's new:
+Joshua is an open-source toolkit\footnote{\url{joshua-decoder.org}}
+for parsing-based statistical machine translation of human languages.
+The original version of Joshua \cite{Joshua-WMT} was a port (from
+Python to Java) of the Hiero machine translation system introduced by
+\newcite{Chiang2007}.  It was later extended to support grammars with
+rich syntactic labels \cite{li2010joshua}. Subsequent efforts produced
+Thrax, the extensible Hadoop-based extraction tool for synchronous
+context-free grammars \cite{Joshua-3.0}, which was later extended to
+support pivoting-based paraphrase extraction \cite{Joshua-4.0}.
+
+Here are a summary of the major components of Joshua 5.0:
 
 \begin{itemize}
-  \item \emph{Sparse features and KBMIRA integration}.
-  \item \emph{Pipeline improvements}.
-  \item \emph{Thrax rewrite}. Find some way to show how much faster it is.
-  \item \emph{Significantly faster}. Compare a graph over threads from last year to this year.
-  \item \emph{Amortization}. Show how much faster that is.
-  \item \emph{Server mode}. Show how that works.
-  \item \emph{Synchronous parsing}. 
-  \item \emph{Speed comparisons, contention elimination, etc}. Vary pruning settings and show model
-    scores 
+  \item \emph{Sparse features}. Joshua now supports an
+    easily-extensible sparse feature implementation, along with tuning
+    methods (PRO and KBMIRA) for efficiently setting the weights on
+    large feature vectors.
+  \item \emph{Significant speed increases}. Joshua 5.0 is up to six
+    times faster than Joshua 4.0 and three times faster than
+    hierarchical Moses.
+  \item \emph{Thrax 2.0}. A reengineered Thrax is up to 300\% faster
+    while using significantly less intermediate disk space.
+  \item \emph{Many other features} including a server mode with fair
+    round-robin schedule among and within requests, pipeline
+    improvements, and better end-user documentation.
 \end{itemize}
-
-Joshua is an open-source toolkit\footnote{\url{joshua-decoder.org}}
-for parsing-based statistical machine translation of human
-languages. The original version of Joshua \cite{Joshua-WMT} was a port
-(from Python to Java) of the Hiero machine translation system
-\cite{Chiang2007}. It was later extended to support grammars with rich
-syntactic labels \cite{li2010joshua}. Subsequent efforts produced
-Thrax, the extensible Hadoop-based extraction tool for
-synchronous context-free grammars \cite{Joshua-3.0}, which was later
-extended to support pivoting-based paraphrase extraction
-\cite{Joshua-4.0}.
-
-Improvements in Joshua over the past year have been focused on speed
-and usability.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{What's New in Joshua 5.0}
 
 \subsection{Sparse features}
 
-Until a few years ago, machine translation systems were for the most
-part limited in the number of features they could employ, since the
-line-based tuning method, MERT, was not able to efficiently search
-over more than a few tens of feature weights. The introduction
-large-scale discriminative tuning procedures has made it possible to
-tune thousands of parameters simultaneously. Features of counts this
-high are often sparse binary features, and so it becomes important to
-be able to represent them internally in an efficient manner. 
+%% Until a few years ago, machine translation systems were for the most
+%% part limited in the number of features they could employ, since the
+%% line-based tuning method, MERT \cite{Och2003}, was not able to
+%% efficiently search over more than a few tens of feature weights. The
+%% introduction large-scale discriminative tuning procedures has made it
+%% possible to tune thousands of parameters simultaneously. With so many
+%% features, many of them binary, it becomes important to be able to
+%% represent them internally in an efficient manner.
 
-Adding new sparse features is as easy as implementing the interface
-depicted in Figure~\ref{figure:feature-api}. At each n-ary rule
-application, all features are asked to score the rule. For performance
-reasons, during construction of the chart, each feature only needs to
-contribute a scalar value of the inner product of the weight vector
-and the features incurred on that hyperedge. Afterwards, during k-best
-extraction, a feature can return a more informative sparse feature
-vector denoting the individual feature names and values incurred at
-each edge.
+The introduction of discriminative tuning methods for machine
+translation \cite{liang2006end,chiang2008online,PRO2011} has made it
+possible to tune large numbers of features in statistical machine
+translation systems, and open-source implementations have made it easy
+\cite{cherry2012batch}.  When dealing with large numbers of features
+(on the order of thousands), it is important that they be represented
+in a sparse format, particularly since large feature sets often employ
+many binary-valued features, a large number of which are zero for any
+particular edge in the hypergraph.
+
+Joshua 5.0 has moved to a sparse feature representation
+internally. Terminologically, features are instantiated as
+\emph{templates}, each of which can contribute any number of features
+to the decoder. For example, the (typically dense) features stored
+with the grammar on disk are each separate features contributed by the
+\textsc{PhraseModel} feature function template. The
+\textsc{LangaugeModel} template contributes only a single feature
+value for each language model that was loaded (typically one).
+
+Adding new sparse features is as easy as implementing the following
+(simplified) interface:
+%
+\begin{itemize}
+\item \texttt{computeCost(edge, i, j)} Returns the cost of applying a
+  rule (an edge in the hypergraph).
+\item \texttt{computeFeatures(edge, i, j)} Computes the features fired
+  when applying a rule.
+\end{itemize}
+%
+At each n-ary rule application, all features are asked to score the
+rule.  For performance reasons, during construction of the chart, each
+feature only needs to contribute a scalar value of the inner product
+of the weight vector and the features incurred on that hyperedge. The
+actual feature names and values need not be explicitly represented
+unless that information is requested during k-best extraction.
 
 For tuning large sets of features, Joshua supports both PRO
-(introduced with Joshua 4.0) and batch MIRA.
+\cite{PRO2011} (introduced with Joshua 4.0) and k-best batch MIRA
+\cite{cherry2012batch}.
+
+The sparse feature implementation did not result in increased decoding
+speeds and, in fact, is part of a large performance increase in
+Joshua, which we now describe.
 
 \subsection{Performance improvements}
 
 We introduced many performance improvements, replacing code designed
 to get the job done under research timeline constraints with more
-efficient alternatives. These improvements have led to speed increases
-of up to 500\%, especially in multithreaded situations.
-Figure~\ref{fig:cmp} plots end-to-end
+efficient alternatives. The details are outside the scope of this
+paper, but include smarter handling of locking across threads, more
+efficient (non string-based) computation of dynamic programming state,and
+replacement of fixed class-based array structures with literals.
+
+We used the following experimental setup to compare Joshua 4.0 and
+5.0: We extracted a large German-English grammar from all sentences
+with no more than 50 words per side from Europarl v.7 and the Common
+Crawl data using Thrax default settings.  After filtering against our
+test set, this grammar contained 70 million rules.  We then trained
+three language models on (1) the target side of our grammar training
+data, (2) English Gigaword, (3) the monolingual English data released
+for WMT13. We tuned a system using KBMIRA and decoded using KenLM
+\cite{KenLM}.  Decoding was performed on 64-core 2.1 GHz AMD Opteron
+processors with 256 GB of available memory.
+
+Figure~\ref{fig:cmp} Figure~\ref{fig:cmp} plots the minimum end-to-end
 runtime\footnote{i.e., including model loading time and grammar
-  sorting.} Joshua 4.0 versus Joshua 5.0, as a function of the number
-of threads.
+  sorting.} as a function of the number of threads.  Each point in the
+graph is the minimum of at least fifteen runs computed at different
+times over a period of a few days.  Joshua 5.0 is up to 500\% faster
+than it was last year, especially in multithreaded situations.
 
 \begin{figure}[!t]
   \begin{center}
@@ -124,10 +177,26 @@ of threads.
   \end{center}
   \label{fig:cmp}
   \caption{End-to-end runtime as a function of the number of threads
-    for Joshua 4.0 and Joshua 5.0.}
+    for Joshua 4.0 and Joshua 5.0 and Moses. Each data point is the
+    minimum of at least fifteen different runs taken at different
+    times over multiple days.}
 \end{figure}
 
-\subsection{}
+For further further comparison, we took these models, converted them
+to Moses format, and then decoded with the latest version\footnote{The
+  latest version available on Github as of June 7, 2013}.  We compiled
+Moses with the default settings and used the in-memory (SCFG) grammar
+format.  BLEU scores were similar\footnote{22.88 for Moses, 22.99 for
+  Joshua 4.0, and 23.23 for Joshua 5.0}.  Figure~\ref{fig:cmp} shows
+that, at high thread count, Joshua is about 200\% faster than
+Moses.
+
+(In fairness, this appears to be due at least in part to some serious
+problems with Moses synchronization. For example, the longest-reported
+translation time reported by Moses for a sentence with 1 thread is
+about 6.13 seconds, which jumps to \emph{3,837 seconds} with 48
+threads. We have filed a bug report, and hope this issue will be
+resolved in time for the final version of this paper.}
 
 \subsection{Thrax 2.0}
 
