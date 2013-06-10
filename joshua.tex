@@ -186,8 +186,8 @@ For further further comparison, we took these models, converted them
 to Moses format, and then decoded with the latest version\footnote{The
   latest version available on Github as of June 7, 2013}.  We compiled
 Moses with the default settings and used the in-memory (SCFG) grammar
-format.  BLEU scores were similar\footnote{22.88 for Moses, 22.99 for
-  Joshua 4.0, and 23.23 for Joshua 5.0}.  Figure~\ref{fig:cmp} shows
+format.  BLEU scores were similar.\footnote{22.88 for Moses, 22.99 for
+  Joshua 4.0, and 23.23 for Joshua 5.0.}  Figure~\ref{fig:cmp} shows
 that, at high thread count, Joshua is about 200\% faster than
 Moses.
 
@@ -196,7 +196,9 @@ problems with Moses synchronization. For example, the longest-reported
 translation time reported by Moses for a sentence with 1 thread is
 about 6.13 seconds, which jumps to \emph{3,837 seconds} with 48
 threads. We have filed a bug report, and hope this issue will be
-resolved in time for the final version of this paper.)
+resolved in time for the final version of this paper. Tracking the
+early part of the curve, where multithreading issues do not come into
+play, suggests that the performance will be similar.)
 
 \subsection{Thrax 2.0}
 
