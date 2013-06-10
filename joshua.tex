@@ -28,17 +28,17 @@
 
 \title{Joshua 5.0: Every day, and in every way, getting better and better}
 
-\author{Matt Post\hltcoe \and Juri Ganitkevitch\clsp \and Yuan Cao\clsp \and Jonathan Weese\clsp 
-  \and Luke Orland\hltcoe \\
-  \clsp Center for Language and Speech Processing \\
-  \hltcoe Human Language Technology Center of Excellence \\
-  Johns Hopkins University \\
-  Baltimore, MD 21218
-  \AND  Chris Callison-Burch \\
-  Computer and Information Sciences Department \\
-  University of Pennsylvania \\
-  Philadelphia, PA 19104
-}
+%% \author{Matt Post\hltcoe \and Juri Ganitkevitch\clsp \and Yuan Cao\clsp \and Jonathan Weese\clsp 
+%%   \and Luke Orland\hltcoe \\
+%%   \clsp Center for Language and Speech Processing \\
+%%   \hltcoe Human Language Technology Center of Excellence \\
+%%   Johns Hopkins University \\
+%%   Baltimore, MD 21218
+%%   \AND  Chris Callison-Burch \\
+%%   Computer and Information Sciences Department \\
+%%   University of Pennsylvania \\
+%%   Philadelphia, PA 19104
+%% }
 
 \date{}
 
@@ -124,7 +124,7 @@ Adding new sparse features is as easy as implementing the following
 %
 \begin{itemize}
 \item \texttt{computeCost(edge, i, j)} Returns the cost of applying a
-  rule (an edge in the hypergraph).
+  rule (an edge in the hypergraph) over the input span $(i,j)$.
 \item \texttt{computeFeatures(edge, i, j)} Computes the features fired
   when applying a rule.
 \end{itemize}
@@ -164,22 +164,22 @@ for WMT13. We tuned a system using KBMIRA and decoded using KenLM
 \cite{KenLM}.  Decoding was performed on 64-core 2.1 GHz AMD Opteron
 processors with 256 GB of available memory.
 
-Figure~\ref{fig:cmp} Figure~\ref{fig:cmp} plots the minimum end-to-end
-runtime\footnote{i.e., including model loading time and grammar
-  sorting.} as a function of the number of threads.  Each point in the
-graph is the minimum of at least fifteen runs computed at different
-times over a period of a few days.  Joshua 5.0 is up to 500\% faster
-than it was last year, especially in multithreaded situations.
+Figure~\ref{fig:cmp} plots the end-to-end runtime\footnote{i.e.,
+  including model loading time and grammar sorting.} as a function of
+the number of threads.  Each point in the graph is the minimum of at
+least fifteen runs computed at different times over a period of a few
+days.  Joshua 5.0 is up to 500\% faster than it was last year,
+especially in multithreaded situations.
 
 \begin{figure}[!t]
   \begin{center}
     \includegraphics[width=0.99\linewidth]{figures/comparison.pdf}
   \end{center}
-  \label{fig:cmp}
   \caption{End-to-end runtime as a function of the number of threads
     for Joshua 4.0 and Joshua 5.0 and Moses. Each data point is the
     minimum of at least fifteen different runs taken at different
     times over multiple days.}
+  \label{fig:cmp}
 \end{figure}
 
 For further further comparison, we took these models, converted them
@@ -196,7 +196,7 @@ problems with Moses synchronization. For example, the longest-reported
 translation time reported by Moses for a sentence with 1 thread is
 about 6.13 seconds, which jumps to \emph{3,837 seconds} with 48
 threads. We have filed a bug report, and hope this issue will be
-resolved in time for the final version of this paper.}
+resolved in time for the final version of this paper.)
 
 \subsection{Thrax 2.0}
 
@@ -263,28 +263,38 @@ a parsed and processed version of the English Gigaword
   \label{tab-thrax-speed}
 \end{table}
 
+\subsection{Other features}
 
+Joshua 5.0 also includes many features designed to increase its
+usability as a research and application tool. Among these is is a
+TCP/IP server architecture designed to handle multiple concurrent
+connections and translate sentences across all connections in a
+round-robin fashion, ensuring fairness.  The decoder maintains a
+thread pool of decoder threads, which wait to be assigned to incoming
+sentences. Each incoming network connection, representing a document
+translation request, is handled by a thread, which repeatedly queries
+the pool for available threads and assigns them to the request's
+sentences.
 
+Joshua's pipeline allows end-to-end model training and evaluation with
+a single, restartable command. This tool has also seen significant
+improvement over the past year.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
+\section{Summary}
 
-We present a new iteration of the Joshua machine translation
-toolkit. Our system has been extended towards efficiently supporting
-large-scale experiments in parsing-based machine translation and
-text-to-text generation: Joshua 4.0 supports compactly represented
-large grammars with its packed grammars, as well as large language
-models via KenLM and BerkeleyLM.We include an implementation of PRO,
-allowing for stable and fast tuning of large feature sets, and extend
-our toolkit beyond pure translation applications by extending Thrax
-with a large-scale paraphrase extraction module.
+The 5.0 release of Joshua is the result of a significant year-long
+research, engineering, and usability effort that we hope will be of
+service to the research community.  
 
 \paragraph{Acknowledgements}
 
-This research was supported by in part by the EuroMatrixPlus project
-funded by the European Commission (7th Framework Programme), and by
-the NSF under grant IIS-0713448. Opinions, interpretations, and
-conclusions are the authors' alone.
+Forthcoming.
+
+%% This research was supported by in part by the EuroMatrixPlus project
+%% funded by the European Commission (7th Framework Programme), and by
+%% the NSF under grant IIS-0713448. Opinions, interpretations, and
+%% conclusions are the authors' alone.
 
 \bibliographystyle{acl2013}
 \bibliography{joshua}
