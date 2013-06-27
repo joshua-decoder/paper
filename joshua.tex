@@ -48,11 +48,11 @@
 \begin{abstract}
   We describe improvements made over the past year to Joshua, an
   open-source translation system for parsing-based translation. The
-  main contributes this past year are significant improvements in
-  speed and usability of the grammar extraction and decoding steps. We
-  have also extended Joshua with support for sparse features and
-  training of large numbers of features with discriminative training
-  methods.
+  main contributions this past year are significant improvements in
+  both speed and usability of the grammar extraction and decoding
+  steps. We have also rewritten the decoder to use a sparse feature
+  representation, enabling training of large numbers of features with
+  discriminative training methods.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -60,14 +60,16 @@
 \label{sec-intro}
 
 Joshua is an open-source toolkit\footnote{\url{joshua-decoder.org}}
-for parsing-based statistical machine translation of human languages.
-The original version of Joshua \cite{Joshua-WMT} was a port (from
-Python to Java) of the Hiero machine translation system introduced by
-\newcite{Chiang2007}.  It was later extended to support grammars with
-rich syntactic labels \cite{li2010joshua}. Subsequent efforts produced
-Thrax, the extensible Hadoop-based extraction tool for synchronous
-context-free grammars \cite{Joshua-3.0}, which was later extended to
-support pivoting-based paraphrase extraction \cite{Joshua-4.0}.
+for hierarchical and syntax-based statistical machine translation of
+human languages.  The original version of Joshua \cite{Joshua-WMT} was
+a port (from Python to Java) of the Hiero machine translation system
+introduced by \newcite{Chiang2007}.  It was later extended to support
+grammars with rich syntactic labels \cite{li2010joshua}. Subsequent
+efforts produced Thrax, the extensible Hadoop-based extraction tool
+for synchronous context-free grammars \cite{Joshua-3.0}, which was
+later extended to support pivoting-based paraphrase extraction
+\cite{Joshua-4.0}. Joshua 5.0 continues our yearly update cycle and is
+the fourth formal release.
 
 Here are a summary of the major components of Joshua 5.0:
 
@@ -77,38 +79,115 @@ Here are a summary of the major components of Joshua 5.0:
     methods (PRO and KBMIRA) for efficiently setting the weights on
     large feature vectors.
   \item \emph{Significant speed increases}. Joshua 5.0 is up to six
-    times faster than Joshua 4.0 and three times faster than
-    hierarchical Moses.
+    times faster than Joshua 4.0, and also does well against
+    hierarchical Moses, where end-to-end decoding (including model
+    loading) is as much as three times faster (although the
+    sentence-level throughput is only half of Moses; see
+    \S\ref{sec:moses}).
   \item \emph{Thrax 2.0}. A reengineered Thrax is up to 300\% faster
     while using significantly less intermediate disk space.
-  \item \emph{Many other features} including a server mode with fair
-    round-robin schedule among and within requests, pipeline
-    improvements, and better end-user documentation.
+  \item \emph{Many other features}. This release contains a number of
+    other features, including a server mode with fair round-robin
+    scheduling among and within requests, a bundler for easily
+    packaging up a trained model, improvements to the Joshua pipeline
+    (for managing end-to-end experiment), and better end-user
+    documentation.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Overview}
+
+Joshua is an open-source end-to-end statistical machine translation
+toolkit. In addition to the decoder component (which performs the
+actual translation), it includes the support infrastructure needed to
+prepare and align training data, build translation and language
+models, tune a system, and evaluate it against test data. 
+
+This section provides a brief overview of the contents and abilities
+of this toolkit.
+
+\subsection{The Pipeline: Gluing it all together}
+
+The Joshua pipeline ties together all the infrastructure needed to
+train and evaluate machine translation systems for research or
+industrial purposes. Once data has been segmented into parallel
+training, development, and test sets, a single invocation of the
+pipeline script is enough to invoke this entire infrastructure from
+beginning to end. Each step is broken down into smaller steps (e.g.,
+tokenizing a file) whose results are cached using SHA-1 sums. This
+allows a reinvoked pipeline to easily skip earlier steps that do not
+need to be recomputed, solving a common headache in the research and
+development cycle.
+
+The Joshua pipeline is similar to other ``experiment
+management systems'' such as that included with Moses.  Moses'
+\verb|Experiment.perl| is a much more general, highly-customizable
+tool that allows the specification and parallel execution of
+customizable steps in arbitrary dependency graphs, much like the
+\textsc{Unix} \verb|make| tool, but written with machine translation
+in mind. Joshua's pipeline is much more limited in that the pipeline
+is hard-coded. However, this reduced versatility covers many standard
+use cases and is arguably easier to use. 
+
+The pipeline is parameterized in many ways, and all the options below
+are selectable with command-line switches. Pipeline documentation is
+available online.
+
+\subsection{Data preparation, Alignment, and Model building}
+
+Data preparation involves data normalization (e.g., collapsing certain
+punctuation symbols) and tokenization (via the Penn treebank
+tokenizer).  Alignment with GIZA++ \cite{giza} and the Berkeley aligner
+\cite{berkeley-aligner} are supported.
+
+Joshua's builtin grammar extractor, Thrax, is a Hadoop-based
+extraction implementation that scales easily to large datasets. It
+supports extraction of both Hiero \cite{Chiang2005} and SAMT grammars
+\cite{samt2006} with extraction heuristics easily specified via a
+flexible configuration file.
+
+The pipeline also supports GHKM grammar extraction \cite{galley2006scalable} using the
+extractors available from Michel
+Galley\footnote{\url{nlp.stanford.edu/~mgalley/software/stanford-ghkm-latest.tar.gz}}
+or Moses.
+
+SAMT and GHKM grammar extraction requires a parse tree, which are
+produced over the training data using the Berkeley parser \cite{petrov2006learning}.
+
+\subsection{Decoding}
+
+The Joshua decoder is an implementation of the CKY+ algorithm
+\cite{chappelier1998generalized} and cube pruning
+\cite{Chiang2007}. Joshua supports arbitrary SCFG grammars (no limit
+to grammar rank). Complexity. Interleaving.
+
+- a description of the parsing algorithm 
+- handling of n-ary rules via implicit binarization
+- interleaving of chart and dotchart
+
+\subsection{Tuning and Testing}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{What's New in Joshua 5.0}
 
 \subsection{Sparse features}
 
-%% Until a few years ago, machine translation systems were for the most
-%% part limited in the number of features they could employ, since the
-%% line-based tuning method, MERT \cite{Och2003}, was not able to
-%% efficiently search over more than a few tens of feature weights. The
-%% introduction large-scale discriminative tuning procedures has made it
-%% possible to tune thousands of parameters simultaneously. With so many
-%% features, many of them binary, it becomes important to be able to
-%% represent them internally in an efficient manner.
-
+Until a few years ago, machine translation systems were for the most
+part limited in the number of features they could employ, since the
+line-based optimization method, MERT \cite{Och2003}, was not able to
+efficiently search over more than twenty or thirty feature weights.
 The introduction of discriminative tuning methods for machine
-translation \cite{liang2006end,chiang2008online,PRO2011} has made it
-possible to tune large numbers of features in statistical machine
-translation systems, and open-source implementations have made it easy
-\cite{cherry2012batch}.  When dealing with large numbers of features
-(on the order of thousands), it is important that they be represented
-in a sparse format, particularly since large feature sets often employ
-many binary-valued features, a large number of which are zero for any
-particular edge in the hypergraph.
+translation
+\cite{liang2006end,tillmann-zhang:2006:COLACL,chiang2008online,PRO2011}
+has made it possible to tune large numbers of features in statistical
+machine translation systems, and open-source implementations such as
+\newcite{cherry2012batch} have made it easy.  When dealing with large
+numbers of features (on the order of thousands), it is important that
+they be represented in a sparse format, particularly since large
+feature sets often employ many binary-valued features, a large number
+of which are zero for any particular edge in the hypergraph.
 
 Joshua 5.0 has moved to a sparse feature representation
 internally. Terminologically, features are instantiated as
@@ -137,8 +216,9 @@ actual feature names and values need not be explicitly represented
 unless that information is requested during k-best extraction.
 
 For tuning large sets of features, Joshua supports both PRO
-\cite{PRO2011} (introduced with Joshua 4.0) and k-best batch MIRA
-\cite{cherry2012batch}.
+\cite{PRO2011}, an in-house version introduced with Joshua 4.0, and
+k-best batch MIRA \cite{cherry2012batch}, implemented via integration
+with code available in Moses.
 
 The sparse feature implementation did not result in increased decoding
 speeds and, in fact, is part of a large performance increase in
