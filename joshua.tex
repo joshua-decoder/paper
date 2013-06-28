@@ -28,17 +28,20 @@
 
 \title{Joshua 5.0: Every day, and in every way, getting better and better}
 
-%% \author{Matt Post\hltcoe \and Juri Ganitkevitch\clsp \and Yuan Cao\clsp \and Jonathan Weese\clsp 
-%%   \and Luke Orland\hltcoe \\
-%%   \clsp Center for Language and Speech Processing \\
-%%   \hltcoe Human Language Technology Center of Excellence \\
-%%   Johns Hopkins University \\
-%%   Baltimore, MD 21218
-%%   \AND  Chris Callison-Burch \\
-%%   Computer and Information Sciences Department \\
-%%   University of Pennsylvania \\
-%%   Philadelphia, PA 19104
-%% }
+\author{Matt Post\hltcoe 
+  \and Juri Ganitkevitch\clsp 
+  \and Luke Orland\hltcoe
+  \and Jonathan Weese\clsp
+  \and Yuan Cao\clsp  \\
+  \clsp Center for Language and Speech Processing \\
+  \hltcoe Human Language Technology Center of Excellence \\
+  Johns Hopkins University \\
+  Baltimore, MD 21218
+  \AND  Chris Callison-Burch \\
+  Computer and Information Sciences Department \\
+  University of Pennsylvania \\
+  Philadelphia, PA 19104
+}
 
 \date{}
 
@@ -76,21 +79,23 @@ Here are a summary of the major components of Joshua 5.0:
 \begin{itemize}
   \item[\S\ref{sec:sparse}] \emph{Sparse features}. Joshua now supports an
     easily-extensible sparse feature implementation, along with tuning
-    methods (PRO and KBMIRA) for efficiently setting the weights on
+    methods (PRO and kbMIRA) for efficiently setting the weights on
     large feature vectors.
-  \item[\S\ref{sec:performance}] \emph{Significant speed increases}. Joshua 5.0 is up to six
-    times faster than Joshua 4.0, and also does well against
-    hierarchical Moses, where end-to-end decoding (including model
-    loading) is as much as three times faster (although the
-    sentence-level throughput is only half of Moses)
-  \item[\S\ref{sec:thrax}] \emph{Thrax 2.0}. A reengineered Thrax is up to 300\% faster
-    while using significantly less intermediate disk space.
-  \item[\S\ref{sec:others}] \emph{Many other features}. This release contains a number of
-    other features, including a server mode with fair round-robin
-    scheduling among and within requests, a bundler for easily
-    packaging up a trained model, improvements to the Joshua pipeline
-    (for managing end-to-end experiment), and better end-user
-    documentation.
+  \item[\S\ref{sec:performance}] \emph{Significant speed
+    increases}. Joshua 5.0 is up to six times faster than Joshua 4.0,
+    and also does well against hierarchical Moses, where end-to-end
+    decoding (including model loading) of WMT test sets is as much as
+    three times faster (although, in the limit, sentence-level
+    throughput in the limit is only half of Moses)
+  \item[\S\ref{sec:thrax}] \emph{Thrax 2.0}. A reengineered Thrax is
+    up to 300\% faster while using significantly less intermediate
+    disk space.
+  \item[\S\ref{sec:other}] \emph{Many other features}. This release
+    contains a number of other features, including a server mode with
+    fair round-robin scheduling among and within requests, a bundler
+    for easily packaging up a trained model, improvements to the
+    Joshua pipeline (for managing end-to-end experiment), and better
+    end-user documentation.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -143,10 +148,9 @@ Joshua's builtin grammar extractor, Thrax, is a Hadoop-based
 extraction implementation that scales easily to large datasets. It
 supports extraction of both Hiero \cite{Chiang2005} and SAMT grammars
 \cite{samt2006} with extraction heuristics easily specified via a
-flexible configuration file.
-
-The pipeline also supports GHKM grammar extraction \cite{galley2006scalable} using the
-extractors available from Michel
+flexible configuration file. The pipeline also supports GHKM grammar
+extraction \cite{galley2006scalable} using the extractors available
+from Michel
 Galley\footnote{\url{nlp.stanford.edu/~mgalley/software/stanford-ghkm-latest.tar.gz}}
 or Moses.
 
@@ -177,7 +181,7 @@ Joshua uses cube pruning \cite{Chiang2007} with a default pop limit of
 \subsection{Tuning and Testing}
 
 Joshua ships with MERT \cite{Och2003} and PRO implementations.  Tuning
-with batch MIRA \cite{cherry2012batch} is also supported, but requires
+with k-best batch MIRA \cite{cherry2012batch} is also supported, but requires
 Moses to be installed.
 
 
@@ -226,9 +230,8 @@ This functionality is implemented via the following
 feature function interface (simplified pseudocode):
 %
 \begin{verbatim}
-  interface FeatureFunction {
+  interface FeatureFunction:
     apply(context, accumulator)
-  }
 \end{verbatim}
 %
 The \verb|context| comprises fixed pieces of the input sentence and
@@ -246,15 +249,15 @@ The \verb|accumulator| object's job is to accumulate feature
 rule via another interface:
 %
 \begin{verbatim}
-  interface Accumulator {
+  interface Accumulator:
     add(feature_name, value)
-  }
 \end{verbatim}
 %
-With this generalization\footnote{Due to Kenneth Heafield.}, we
-define two accumulator objects: one, used during decoding, maintains
-and eventually returns only a weighted sum, and the second, used (if
-needed) during k-best extraction, constructs a sparse feature vector.
+The accumulator generalization,\footnote{Due to Kenneth Heafield.}
+allows us use a single feature-gathering function for two accumulator
+objects: one, used during decoding, maintains and eventually returns
+only a weighted sum, and the second, used (if needed) during k-best
+extraction, constructs a sparse feature vector.
 
 For tuning large sets of features, Joshua supports both PRO
 \cite{PRO2011}, an in-house version introduced with Joshua 4.0, and
@@ -266,19 +269,20 @@ with code available in Moses.
 
 We introduced many performance improvements, replacing code designed
 to get the job done under research timeline constraints with more
-efficient alternatives. The details are outside the scope of this
-paper, but include smarter handling of locking across threads, more
-efficient (non string-based) computation of dynamic programming state,and
-replacement of fixed class-based array structures with literals.
+efficient alternatives, including smarter handling of locking among
+threads, more efficient (non string-based) computation of dynamic
+programming state, and replacement of fixed class-based array
+structures with fixed-size literals.
 
 We used the following experimental setup to compare Joshua 4.0 and
 5.0: We extracted a large German-English grammar from all sentences
-with no more than 50 words per side from Europarl v.7 and the Common
-Crawl data using Thrax default settings.  After filtering against our
-test set, this grammar contained 70 million rules.  We then trained
-three language models on (1) the target side of our grammar training
-data, (2) English Gigaword, (3) the monolingual English data released
-for WMT13. We tuned a system using KBMIRA and decoded using KenLM
+with no more than 50 words per side from Europarl v.7
+\cite{koehn2005europarl} and the Common Crawl data using Thrax default
+settings.  After filtering against our test set (newstest2012), this
+grammar contained 70 million rules.  We then trained three language
+models on (1) the target side of our grammar training data, (2)
+English Gigaword, and (3) the monolingual English data released for
+WMT13. We tuned a system using kbMIRA and decoded using KenLM
 \cite{KenLM}.  Decoding was performed on 64-core 2.1 GHz AMD Opteron
 processors with 256 GB of available memory.
 
@@ -286,37 +290,47 @@ Figure~\ref{fig:cmp} plots the end-to-end runtime\footnote{i.e.,
   including model loading time and grammar sorting.} as a function of
 the number of threads.  Each point in the graph is the minimum of at
 least fifteen runs computed at different times over a period of a few
-days.  Joshua 5.0 is up to 500\% faster than it was last year,
+days.  The main point of comparison, between Joshua 4.0 and 5.0, shows
+that the current version is up to 500\% faster than it was last year,
 especially in multithreaded situations.
 
 \begin{figure}[!t]
   \begin{center}
-    \includegraphics[width=0.99\linewidth]{figures/comparison.pdf}
+    \includegraphics[width=0.99\linewidth]{plots/runtimes.pdf}
   \end{center}
   \caption{End-to-end runtime as a function of the number of threads
-    for Joshua 4.0 and Joshua 5.0 and Moses. Each data point is the
+    for Joshua 4.0, Joshua 5.0, and Moses. Each data point is the
     minimum of at least fifteen different runs taken at different
     times over multiple days.}
   \label{fig:cmp}
 \end{figure}
 
-For further further comparison, we took these models, converted them
-to Moses format, and then decoded with the latest version\footnote{The
-  latest version available on Github as of June 7, 2013}.  We compiled
-Moses with the default settings and used the in-memory (SCFG) grammar
-format.  BLEU scores were similar.\footnote{22.88 for Moses, 22.99 for
-  Joshua 4.0, and 23.23 for Joshua 5.0.}  Figure~\ref{fig:cmp} shows
-that, at high thread count, Joshua is about 200\% faster than
-Moses.
+\begin{figure}[!t]
+  \begin{center}
+    \includegraphics[width=0.99\linewidth]{plots/decoding-only.pdf}
+  \end{center}
+  \caption{Decoding time alone, having subtracted out model loading
+    and sorting times as reported in log files.}
+  \label{fig:decoding-only}
+\end{figure}
 
-(In fairness, this appears to be due at least in part to some serious
-problems with Moses synchronization. For example, the longest-reported
-translation time reported by Moses for a sentence with 1 thread is
-about 6.13 seconds, which jumps to \emph{3,837 seconds} with 48
-threads. We have filed a bug report, and hope this issue will be
-resolved in time for the final version of this paper. Tracking the
-early part of the curve, where multithreading issues do not come into
-play, suggests that the performance will be similar.)
+For further comparison, we took these models, converted them to
+hierarchical Moses format, and then decoded with the latest
+version.\footnote{The latest version available on Github as of June 7,
+  2013} We compiled Moses with the all the recommended optimization
+settings \footnote{With tcmalloc and the following compile flags:
+  \texttt{--max-factors=1 --kenlm-max-order=5 debug-symbols=off}} and
+used the in-memory (SCFG) grammar format.  BLEU scores were
+similar.\footnote{22.88 for Moses, 22.99 for Joshua 4.0, and 23.23 for
+  Joshua 5.0.}  Figure~\ref{fig:cmp} shows that, in this end-to-end
+setting, Joshua is about 200\% faster than Moses at high thread
+counts.
+
+Figure \ref{fig:decoding-only} furthers the comparison between Joshua
+and Moses by plotting only decoding time (that is, subtracting out
+model loading and sorting times). Moses' decoding speed is about twice
+that of Joshua, which shows that the end-to-end gains in
+Figure~\ref{fig:cmp} are due to more efficient grammar loading.
 
 \subsection{Thrax 2.0}
 \label{sec:thrax}
@@ -388,19 +402,20 @@ a parsed and processed version of the English Gigaword
 \label{sec:other}
 
 Joshua 5.0 also includes many features designed to increase its
-usability as a research and application tool. Among these is is a
-TCP/IP server architecture designed to handle multiple concurrent
-connections and translate sentences across all connections in a
-round-robin fashion, ensuring fairness.  The decoder maintains a
-thread pool of decoder threads, which wait to be assigned to incoming
-sentences. Each incoming network connection, representing a document
-translation request, is handled by a thread, which repeatedly queries
-the pool for available threads and assigns them to the request's
-sentences.
+usability as a research and application tool.  These include:
 
-Joshua's pipeline allows end-to-end model training and evaluation with
-a single, restartable command. This tool has also seen significant
-improvement over the past year.
+\begin{itemize}
+\item A TCP/IP server architecture for networked installations.  This
+  setup interactions with Joshua's internal multithreading
+  implementation, which is designed to handle multiple sets of
+  translation requests, ensuring fairness in thread assignment both
+  across and within these connections.
+\item A bundler that makes it easy to package up a trained model with
+  all of its support files and dependencies.
+\item A year's worth of improvements to the Joshua pipeline, including many
+  new features and supported options, and increased robustness to error.
+\item Extended end-user and developer documentation.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary}
@@ -414,6 +429,12 @@ service to the research community.
 Joshua's sparse feature representation owes much to discussions with
 Colin Cherry, Barry Haddow, Chris Dyer, and Kenneth Heafield at MT
 Marathon 2012, in Edinburgh.
+
+This material is based on research sponsored by the NSF under grant
+IIS-1249516 and DARPA under agreement number FA8750-13-2-0017 (the
+DEFT program). The views and conclusions contained in this publication
+are those of the authors and should not be interpreted as representing
+official policies or endorsements of DARPA or the U.S. Government.
 
 %% This research was supported by in part by the EuroMatrixPlus project
 %% funded by the European Commission (7th Framework Programme), and by
