@@ -432,6 +432,22 @@ usability as a research and application tool.  These include:
 \end{itemize}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{WMT Submissions}
+
+We submitted a constrained entry for all tracks except English-Czech
+(nine in total). Our systems were constructed in a straightforward
+fashion and without any language-specific adaptations using the Joshua
+pipeline. For each language pair, we trained a Hiero system on all
+sentences with no more than fifty words per side in the Europarl, news
+commentary, and common crawl corpora. We built two Kneser-Ney language
+models: one from the monolingual News Crawl corpora (2007--2012), and
+another from the target side of the training data.  For systems
+translating into English, we added a third language model built on
+Gigaword. Language models were combined linearly into a single
+language model using interpolation weights from the tuning data
+(newstest2011).  We tuned our systems with kbMIRA, and used simple
+capitalization and detokenization heuristics for postprocessing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary}
