@@ -447,8 +447,9 @@ another from the target side of the training data.  For systems
 translating into English, we added a third language model built on
 Gigaword. Language models were combined linearly into a single
 language model using interpolation weights from the tuning data
-(newstest2011).  We tuned our systems with kbMIRA, and used simple
-capitalization and detokenization heuristics for postprocessing.
+(newstest2011).  We tuned our systems with kbMIRA. For truecasing, 
+we used a monolingual translation system built on the training data,
+and finally detokenized with simple heuristics.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary}
@@ -473,7 +474,7 @@ DEFT program).  The U.S.\ Government is authorized to reproduce and
 distribute reprints for Governmental purposes.  The views and
 conclusions contained in this publication are those of the authors and
 should not be interpreted as representing official policies or
-endorsements of DARPA or the U.S. Government.
+endorsements of DARPA or the U.S.\ Government.
 
 \bibliographystyle{acl2013}
 \bibliography{joshua}
