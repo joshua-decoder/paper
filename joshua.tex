@@ -340,11 +340,48 @@ rule extraction code was rewritten to be easier to understand and
 extend, allowing, for instance, for an easy inclusion of alternative
 nonterminal labeling strategies.
 
+\begin{table*}[t]
+  \begin{center}
+    \begin{tabular}{|c|r|r|r|r|r|r|r|r|}
+      \hline
+      & \multicolumn{2}{c|}{Cs-En} & \multicolumn{2}{c|}{Fr-En} &
+      \multicolumn{2}{c|}{De-En} & \multicolumn{2}{c|}{Es-En} \\
+
+      Rules & \multicolumn{2}{c|}{112M} & \multicolumn{2}{c|}{357M} &
+      \multicolumn{2}{c|}{202M} & \multicolumn{2}{c|}{380M} \\
+
+      \hline
+
+      & \multicolumn{1}{c|}{Space} & \multicolumn{1}{c|}{Time} &
+      \multicolumn{1}{c|}{Space} & \multicolumn{1}{c|}{Time}  &
+      \multicolumn{1}{c|}{Space} & \multicolumn{1}{c|}{Time}  &
+      \multicolumn{1}{c|}{Space} &  \multicolumn{1}{c|}{Time} \\
+      \hline
+      \hline
+      Joshua 4.0 & 120GB & 112 min & 364GB & 369 min & 211GB & 203 min & 413GB & 397 min \\
+      \hline
+      Joshua 5.0 & 31GB  & 25 min & 101GB  & 81 min & 56GB  & 44 min & 108GB & 84 min \\
+      \hline
+      \hline
+      Difference & -74.1\% & -77.7\%  & -72.3\% & -78.0\%  & -73.5\% & -78.3\%  & -73.8\% & -78.8\% \\
+      \hline
+    \end{tabular}
+  \end{center}
+  \caption{Comparing Hadoop's intermediate disk space use and
+    extraction time on a selection of Europarl v.7 Hiero grammar
+    extractions. Disk space was measured at its maximum, at
+    the input of Thrax's final grammar aggregation stage. Runtime was
+    measured on our Hadoop cluster with a capacity of 52 mappers and
+    26 reducers. On average Thrax 2.0, bundled with Joshua 5.0,
+    is up to 300\% faster and more compact.}
+  \label{tab-thrax-speed}
+\end{table*}
+
 We optimized the data representation used for the underlying
 map-reduce framework towards greater compactness and speed --
 resulting in a 300\% increase in extraction speed and an equivalent
 reduction is disk I/O (see Table~\ref{tab-thrax-speed}). These gains
-enabled us to extract a syntactically labeled De-En SAMT-style
+enable us to extract a syntactically labeled De-En SAMT-style
 translation grammar from a bitext of over 4 million sentence pairs in
 just over 3 hours. Furthermore, Thrax 2.0 is capable of scaling to
 very large data sets, like the composite bitext used in the extraction
@@ -375,28 +412,6 @@ extract rich distributional signatures for 175 million 1-to-4-gram
 phrases from the Annotated Gigaword corpus \cite{annotated-gigaword},
 a parsed and processed version of the English Gigaword
 \cite{Gigaword}.
-
-\begin{table}[t]
-  \begin{center}
-    \begin{tabular}{|c|r|r|r|r|}
-      \hline
-      & Disk Space & Extraction Time \\
-      \hline
-      \hline
-      Joshua 4.0 & 245GB & 219 min \\
-      \hline
-      Joshua 5.0 & 62GB  & 55 min\\
-      \hline
-      \hline
-      Difference & -75\% & -75\% \\
-      \hline
-    \end{tabular}
-  \end{center}
-  \caption{Comparing Hadoop's intermediate disk space use and extraction time on a
-    De-En Europarl Hiero grammar. Thrax 2.0, bundled with Joshua 5.0,
-    is up to 300\% faster and more compact.}
-  \label{tab-thrax-speed}
-\end{table}
 
 \subsection{Other features}
 \label{sec:other}
