@@ -26,7 +26,7 @@
 \newcommand{\upenn}{\ensuremath{{}^\text{2}}}
 \newcommand{\grammarrule}[3]{$#1 \to \langle \text{#2} , \text{#3} \rangle$ }
 
-\title{Joshua 5.0: Every day, and in every way, getting better and better}
+\title{Joshua 5.0: Sparse features, performance enhancements, and improved grammar extraction}
 
 \author{Matt Post\hltcoe 
   \and Juri Ganitkevitch\clsp 
@@ -36,11 +36,9 @@
   \clsp Center for Language and Speech Processing \\
   \hltcoe Human Language Technology Center of Excellence \\
   Johns Hopkins University \\
-  Baltimore, MD 21218
   \AND  Chris Callison-Burch \\
   Computer and Information Sciences Department \\
   University of Pennsylvania \\
-  Philadelphia, PA 19104
 }
 
 \date{}
@@ -86,7 +84,7 @@ Here are a summary of the major components of Joshua 5.0:
     and also does well against hierarchical Moses, where end-to-end
     decoding (including model loading) of WMT test sets is as much as
     three times faster (although, in the limit, sentence-level
-    throughput in the limit is only half of Moses)
+    throughput is only half that of Moses)
   \item[\S\ref{sec:thrax}] \emph{Thrax 2.0}. A reengineered Thrax is
     up to 300\% faster while using significantly less intermediate
     disk space.
@@ -443,13 +441,16 @@ service to the research community.
 
 Joshua's sparse feature representation owes much to discussions with
 Colin Cherry, Barry Haddow, Chris Dyer, and Kenneth Heafield at MT
-Marathon 2012, in Edinburgh.
+Marathon 2012 in Edinburgh.
 
 This material is based on research sponsored by the NSF under grant
 IIS-1249516 and DARPA under agreement number FA8750-13-2-0017 (the
-DEFT program). The views and conclusions contained in this publication
-are those of the authors and should not be interpreted as representing
-official policies or endorsements of DARPA or the U.S. Government.
+DEFT program).  The U.S.\ Government is authorized to reproduce and
+distribute reprints for Governmental purposes.  The views and
+conclusions contained in this publication are those of the authors and
+should not be interpreted as representing official policies or
+endorsements of DARPA or the U.S. Government.
+
 
 %% This research was supported by in part by the EuroMatrixPlus project
 %% funded by the European Commission (7th Framework Programme), and by
