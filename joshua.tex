@@ -175,7 +175,7 @@ when filtering grammars to test sets (for GHKM).
 
 Joshua uses cube pruning \cite{Chiang2007} with a default pop limit of
 100 to efficiently explore the search space. Other decoder options are
-too numerous to mention here, but are well-documented online.
+too numerous to mention here, but are documented online.
 
 \subsection{Tuning and testing}
 
@@ -298,9 +298,9 @@ especially in multithreaded situations.
   \begin{center}
     \includegraphics[width=0.99\linewidth]{plots/runtimes.pdf}
   \end{center}
-  \caption{End-to-end runtime as a function of the number of threads
-    for Joshua 4.0, Joshua 5.0, and Moses. Each data point is the
-    minimum of at least fifteen different runs.}
+  \caption{End-to-end runtime as a function of the number of threads.
+    Each data point is the minimum of at least fifteen different
+    runs.}
   \label{fig:cmp}
 \end{figure}
 
@@ -308,8 +308,7 @@ especially in multithreaded situations.
   \begin{center}
     \includegraphics[width=0.99\linewidth]{plots/decoding-only.pdf}
   \end{center}
-  \caption{Decoding time alone (not including model loading and
-    sorting times).}
+  \caption{Decoding time alone.}
   \label{fig:decoding-only}
 \end{figure}
 
@@ -389,10 +388,10 @@ sentence pairs and over 2 billion words on the English side.
 \begin{figure}
   \centering
   \includegraphics[ width=0.95\linewidth]{figures/rich_context.pdf}
-  \caption{\small Here, position-aware lexical and part-of-speech
-    $n$-gram features, labeled dependency links, and features
-    reflecting the phrase's CCG-style label $\mathit{NP/NN}$ are
-    included in the context vector.}\label{fig-rich-context}
+  \caption{Here, position-aware lexical and part-of-speech $n$-gram
+    features, labeled dependency links, and features reflecting the
+    phrase's CCG-style label $\mathit{NP/NN}$ are included in the
+    context vector.}\label{fig-rich-context}
 \end{figure}
 
 Furthermore, Thrax 2.0 contains a module focused on the extraction of
@@ -412,7 +411,7 @@ a parsed and processed version of the English Gigaword
 \cite{Gigaword}.
 
 Thrax is distributed with Joshua and is also available as a separate
-download.\footnote{github.com/joshua/thrax}
+download.\footnote{\url{github.com/joshua-decoder/thrax}}
 
 \subsection{Other features}
 \label{sec:other}
@@ -421,15 +420,18 @@ Joshua 5.0 also includes many features designed to increase its
 usability.  These include:
 
 \begin{itemize}
-\item A TCP/IP server architecture.  This setup interactions with
-  Joshua's internal multithreading implementation, which is designed
-  to handle multiple sets of translation requests, ensuring fairness
-  in thread assignment both across and within these connections.
+\item A TCP/IP server architecture, designed to handle multiple sets
+  of translation requests while ensuring fairness in thread assignment
+  both across and within these connections.
+\item Intelligent selection of translation and language model training
+  \cite{moore2010intelligent,axelrod-he-gao:2011:EMNLP} data using
+  cross-entropy difference to rank training candidates
+  \cite{orland-taus}.
 \item A bundler for easy packaging of trained models with
   all of its dependencies.
 \item A year's worth of improvements to the Joshua pipeline, including many
   new features and supported options, and increased robustness to error.
-\item Extended end-user and developer documentation.
+\item Extended documentation.
 \end{itemize}
 
 
@@ -440,8 +442,8 @@ We submitted a constrained entry for all tracks except English-Czech
 (nine in total). Our systems were constructed in a straightforward
 fashion and without any language-specific adaptations using the Joshua
 pipeline. For each language pair, we trained a Hiero system on all
-sentences with no more than fifty words per side in the Europarl, news
-commentary, and common crawl corpora. We built two Kneser-Ney language
+sentences with no more than fifty words per side in the Europarl, News
+Commentary, and Common Crawl corpora. We built two interpolated Kneser-Ney language
 models: one from the monolingual News Crawl corpora (2007--2012), and
 another from the target side of the training data.  For systems
 translating into English, we added a third language model built on
@@ -459,7 +461,7 @@ research, engineering, and usability effort that we hope will be of
 service to the research community. User-friendly packages of Joshua
 are available from \url{joshua-decoder.org}, while developers are
 encouraged to participate via
-\url{github.com/joshua/joshua-decoder}. Mailing lists, linked from the
+\url{github.com/joshua-decoder/joshua}. Mailing lists, linked from the
 main Joshua page, are available for both.
 
 \paragraph{Acknowledgments}
