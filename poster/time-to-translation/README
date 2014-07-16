@@ -1,0 +1,10 @@
+Data used to produce plot showing time to translation, single threaded, pop level = 5.
+
+joshua-log.pop-5
+  joshua raw file
+joshua.txt
+  points harvested from joshua file
+moses-log.pop-5
+  moses raw file
+process.pl
+  script
